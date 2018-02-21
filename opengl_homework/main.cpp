@@ -7,6 +7,8 @@ static GLfloat r1 = 0.0, g1 = 0.0, b1 = 0.0;
 static GLfloat r2 = 0.0, g2 = 0.0, b2 = 0.0;
 static GLfloat r3 = 0.0, g3 = 0.0, b3 = 0.0;
 static GLfloat ry1 = 0.0;
+static GLfloat flowerWind = 0.0090;
+static GLfloat smoke = 0.0, smoke2 = 0.0;
 int random, random1, random2;
 int rain;
 int time;
@@ -38,29 +40,40 @@ void ellipas(float a, float b, float x1, float y1, float ar)
 	}
 	glEnd();
 }
-void line(float x1, float y1)
+void line(float x1, float y1,float ar)
 {
+	float xr, yr;
+
+	//wind - not done
+	xr = -(x1 * cos(ar) + -0.5 * sin(ar));
+	yr = x1 * sin(ar) - -0.5 * cos(ar);
+
 	glLineWidth(10);
 	glColor3f(0.0, 0.09, 0.0);
 	glBegin(GL_LINES);
 	glVertex2f(x1, -0.5);
-	glVertex2f(x1, y1);
+	glVertex2f(x1 , y1);
 	glEnd();
 }
-void flower(float r, float x1, float y1)
+void flower(float r, float x1, float y1,float ar)
 {
-	float x, y;
-	line(x1, y1);
+	float x, y, xr, yr;
+	line(x1, y1, ar);
+
+	//wind not done
+	xr = x1 * cos(ar) - -0.5 * sin(ar);
+	yr = x1 * sin(ar) + -0.5 * cos(ar);
+
 	glColor3f(0.86, 0.73, 0.0);
 	glBegin(GL_POLYGON_BIT);
-	for (int i = 0; i <= 360; i++) {
+	for(int i = 0; i <= 360; i++) {
 		x = r * cos(8 * i) * cos(i);
 		y = r * cos(8 * i) * sin(i);
 		glVertex2f(x + x1, y + y1);
 	}
 	glEnd();
 	glColor3f(0.06, 0.03, 0.0);
-	circle(r / 2, x1, y1);
+	circle(r/2, x1, y1);
 }
 void night()
 {
@@ -98,109 +111,6 @@ void smallWindow(int n)
 	glVertex2f(0.5 + 0.045 + n * r, -0.23 + 0.08);
 	glEnd();
 }
-void house(void)
-{
-	float x1 = 0.0, x2 = 0.7;
-	float y1 = -0.5, y2 = 0;
-
-	//ตัวบ้าน
-	glBegin(GL_POLYGON);
-	glColor3f(0.14, 0.16, 0.34);
-	glVertex2f(x1, y1);
-	glVertex2f(x1, y2);
-	glVertex2f(x2, y2);
-	glVertex2f(x2, y1);
-	glEnd();
-
-	//ป่องไฟบ้าน
-	glColor3f(0.0, 0.0, 0.21);
-	glBegin(GL_POLYGON);
-	glVertex2f(0.55, 0.0);
-	glVertex2f(0.55, 0.3);
-	glVertex2f(0.65, 0.3);
-	glVertex2f(0.65, 0.0);
-	glEnd();
-
-	//ขอบป่องไฟบ้าน
-	glColor3f(0.0, 0.0, 0.5);
-	glBegin(GL_POLYGON);
-	glVertex2f(0.53, 0.3);
-	glVertex2f(0.53, 0.35);
-	glVertex2f(0.67, 0.35);
-	glVertex2f(0.67, 0.3);
-	glEnd();
-
-	//หลังคา
-	glColor3f(0.0, 0.0, 0.21);
-	glBegin(GL_POLYGON);
-	glVertex2f(-0.05, 0.3 - 0.3);
-	glVertex2f(0.1, 0.5 - 0.3);
-	glVertex2f(0.6, 0.5 - 0.3);
-	glVertex2f(0.75, 0.3 - 0.3);
-	glEnd();
-
-	//ขอบประตู
-	glColor3f(0.20, 0.09, 0.0);
-	glBegin(GL_POLYGON);
-	glVertex2f(0.48, y1);
-	glVertex2f(0.48, 0.23 - 0.3);
-	glVertex2f(0.67, 0.23 - 0.3);
-	glVertex2f(0.67, y1);
-	glEnd();
-
-	//ประตู
-	glColor3f(0.29, 0.16, 0.0);
-	glBegin(GL_POLYGON);
-	glVertex2f(0.5, y1);
-	glVertex2f(0.5, 0.2 - 0.3);
-	glVertex2f(0.65, 0.2 - 0.3);
-	glVertex2f(0.65, y1);
-	glEnd();
-
-	//หน้าต่างเล็ก
-	for (int i = 0; i <= 3; i++) {
-		glColor3f(0.6, 0.6, 0.6);
-		smallWindow(i);
-	}
-	glColor3f(0.6, 0.6, 0.6);
-	circle(0.01, 0.63, 0.2 - 0.35 - 0.15);
-
-	//ขอบหน้าต่าง
-	glColor3f(0.20, 0.09, 0.0);
-	glBegin(GL_POLYGON);
-	glVertex2f(0.1 - 0.02, 0.05 - 0.35);
-	glVertex2f(0.1 - 0.02, 0.2 - 0.3);
-	glVertex2f(0.2 + 0.02, 0.2 - 0.3);
-	glVertex2f(0.2 + 0.02, 0.05 - 0.35);
-	glEnd();
-
-	//หน้าต่าง
-	glColor3f(0.0, 0.5, 1.0);
-	glBegin(GL_POLYGON);
-	glVertex2f(0.1, 0.05 - 0.35);
-	glVertex2f(0.1, 0.2 - 0.3);
-	glVertex2f(0.2, 0.2 - 0.3);
-	glVertex2f(0.2, 0.05 - 0.35);
-	glEnd();
-
-	//ขอบหน้าต่าง2
-	glColor3f(0.20, 0.09, 0.0);
-	glBegin(GL_POLYGON);
-	glVertex2f(0.3 - 0.02, 0.05 - 0.35);
-	glVertex2f(0.3 - 0.02, 0.2 - 0.3);
-	glVertex2f(0.4 + 0.02, 0.2 - 0.3);
-	glVertex2f(0.4 + 0.02, 0.05 - 0.35);
-	glEnd();
-
-	//หน้าต่าง2
-	glColor3f(0.0, 0.5, 1.0);
-	glBegin(GL_POLYGON);
-	glVertex2f(0.3, 0.05 - 0.35);
-	glVertex2f(0.3, 0.2 - 0.3);
-	glVertex2f(0.4, 0.2 - 0.3);
-	glVertex2f(0.4, 0.05 - 0.35);
-	glEnd();
-}
 void fence(int n)
 {
 	float i = 0.08;
@@ -228,6 +138,150 @@ void fence(int n)
 	glBegin(GL_LINES);
 	glVertex2f(-1.0, -0.44);
 	glVertex2f(1.0, -0.44);
+	glEnd();
+}
+void house(float r,float g, float b)
+{
+	float x1 = 0.0, x2 = 0.7;
+	float y1 = -0.5, y2 = 0;
+
+	//Sunflower gardan
+	flower(0.08, 1, -0.16, flowerWind);
+	flower(0.075, 0.9, -0.08, flowerWind);
+	flower(0.06, 0.8, -0.2, flowerWind);
+	flower(0.05, -0.07, -0.18, flowerWind);
+	flower(0.06, -0.2, -0.17, flowerWind);
+	flower(0.04, -0.13, -0.27, flowerWind);
+	flower(0.07, -0.3, -0.1, flowerWind);
+	flower(0.07, -0.4, -0.2, flowerWind);
+	flower(0.07, -0.5, -0.08, flowerWind);
+	flower(0.04, -0.56, -0.25, flowerWind);
+	flower(0.06, -0.62, -0.15, flowerWind);
+	flower(0.06, -0.7, -0.2, flowerWind);
+	flower(0.08, -0.8, -0.1, flowerWind);
+	flower(0.08, -0.9, -0.15, flowerWind);
+	//Long Fence
+	for (int i = 0; i <= 30; i++) {
+		glColor3f(0.11, 0.08, 0.0);
+		fence(i);
+	}
+
+	//house
+	glBegin(GL_POLYGON);
+	glColor3f(0.14, 0.16, 0.34);
+	glVertex2f(x1, y1);
+	glVertex2f(x1, y2);
+	glVertex2f(x2, y2);
+	glVertex2f(x2, y1);
+	glEnd();
+
+	//ป่องไฟบ้าน
+	glColor3f(0.0, 0.0, 0.21);
+	glBegin(GL_POLYGON);
+	glVertex2f(0.55, 0.0);
+	glVertex2f(0.55, 0.3);
+	glVertex2f(0.65, 0.3);
+	glVertex2f(0.65, 0.0);
+	glEnd();
+
+	//ขอบป่องไฟบ้าน
+	glColor3f(0.0, 0.0, 0.5);
+	glBegin(GL_POLYGON);
+	glVertex2f(0.53, 0.3);
+	glVertex2f(0.53, 0.35);
+	glVertex2f(0.67, 0.35);
+	glVertex2f(0.67, 0.3);
+	glEnd();
+	
+	//smoke
+	float s1 = 0.5 / 8;
+	float s2 = 0.2/8;
+	glColor3f(0.858, 0.858, 0.858);
+	if (smoke <= 30)
+		ellipas(s1, s2, 0.63, 0.39,0);
+	else if (smoke <= 60)
+		ellipas(s1 + 0.02, s2 + 0.02, 0.67, 0.43, 0);
+	else if (smoke <= 90)
+		ellipas(s1 + 0.04, s2 + 0.04, 0.69, 0.48, 0);
+
+	//หลังคา
+	glColor3f(0.0, 0.0, 0.21);
+	glBegin(GL_POLYGON);
+	glVertex2f(-0.05, 0.3 - 0.3);
+	glVertex2f(0.1, 0.5 - 0.3);
+	glVertex2f(0.6, 0.5 - 0.3);
+	glVertex2f(0.75, 0.3 - 0.3);
+	glEnd();
+
+	//ขอบประตู
+	glColor3f(0.20, 0.09, 0.0);
+	glBegin(GL_POLYGON);
+	glVertex2f(0.48, y1);
+	glVertex2f(0.48, 0.23 - 0.3);
+	glVertex2f(0.67, 0.23 - 0.3);
+	glVertex2f(0.67, y1);
+	glEnd();
+
+	//Door
+	glColor3f(0.29, 0.16, 0.0);
+	glBegin(GL_POLYGON);
+	glVertex2f(0.5, y1);
+	glVertex2f(0.5, 0.2 - 0.3);
+	glVertex2f(0.65, 0.2 - 0.3);
+	glVertex2f(0.65, y1);
+	glEnd();
+
+	//small window
+	for (int i = 0; i <= 3; i++) {
+		glColor3f(0.6, 0.6, 0.6);
+		smallWindow(i);
+	}
+	glColor3f(0.6, 0.6, 0.6);
+	circle(0.01, 0.63, 0.2 - 0.35 - 0.15);
+
+	//ขอบหน้าต่าง
+	glColor3f(0.20, 0.09, 0.0);
+	glBegin(GL_POLYGON);
+	glVertex2f(0.1 - 0.02, 0.05 - 0.35);
+	glVertex2f(0.1 - 0.02, 0.2 - 0.3);
+	glVertex2f(0.2 + 0.02, 0.2 - 0.3);
+	glVertex2f(0.2 + 0.02, 0.05 - 0.35);
+	glEnd();
+
+	//window
+	glColor3f(r, g, b);
+	glBegin(GL_POLYGON);
+	glVertex2f(0.1, 0.05 - 0.35);
+	glVertex2f(0.1, 0.2 - 0.3);
+	glVertex2f(0.2, 0.2 - 0.3);
+	glVertex2f(0.2, 0.05 - 0.35);
+	glEnd();
+
+	//ขอบหน้าต่าง2
+	glColor3f(0.20, 0.09, 0.0);
+	glBegin(GL_POLYGON);
+	glVertex2f(0.3 - 0.02, 0.05 - 0.35);
+	glVertex2f(0.3 - 0.02, 0.2 - 0.3);
+	glVertex2f(0.4 + 0.02, 0.2 - 0.3);
+	glVertex2f(0.4 + 0.02, 0.05 - 0.35);
+	glEnd();
+
+	//window2
+	glColor3f(r, g, b);
+	glBegin(GL_POLYGON);
+	glVertex2f(0.3, 0.05 - 0.35);
+	glVertex2f(0.3, 0.2 - 0.3);
+	glVertex2f(0.4, 0.2 - 0.3);
+	glVertex2f(0.4, 0.05 - 0.35);
+	glEnd();
+
+	//พื้นดิน
+	glBegin(GL_POLYGON);
+	glColor3f(0.16, 0.08, 0.0);
+	glVertex2f(-1, -0.1 - 0.4);
+	glVertex2f(-1, -1);
+	glVertex2f(1, -1);
+	glVertex2f(1, -0.1 - 0.4);
 	glEnd();
 }
 void car(float x1, float y1, float r, float g, float b)
@@ -259,6 +313,18 @@ void car(float x1, float y1, float r, float g, float b)
 	glVertex2f(1.3 + x1, -0.85 + y1);
 	glVertex2f(1.35 + x1, -0.85 + y1);
 	glEnd();
+
+	//smoke
+	float s1 = 0.5 / 14;
+	float s2 = 0.2 / 14;
+	glColor3f(0.329, 0.329, 0.329);
+	if (smoke2 <= 3)
+		ellipas(s1, s2, 1.41 + x1, -0.88 + y1, 0);
+	else if (smoke2 <= 6)
+		ellipas(s1 + 0.02, s2 + 0.02, 1.43 + x1, -0.86 + y1, 0);
+	else if (smoke2 <= 9)
+		ellipas(s1 + 0.04, s2 + 0.04, 1.45 + x1, -0.84 + y1, 0);
+
 
 	//ไฟรถ
 	glColor3f(0.6, 0.6, 0.6);
@@ -423,11 +489,6 @@ void raining()
 	test.draw(ry1, ry1, 1.3);
 	test.draw(ry1, ry1, 1.4);
 	test.draw(ry1, ry1, 1.5);
-	test.draw(ry1, ry1, 1.6);
-	test.draw(ry1, ry1, 1.7);
-	test.draw(ry1, ry1, 1.8);
-	test.draw(ry1, ry1, 1.9);
-	test.draw(ry1, ry1, 2);
 	test.draw(ry1, ry1, -0.1);
 	test.draw(ry1, ry1, -0.2);
 	test.draw(ry1, ry1, -0.3);
@@ -452,50 +513,27 @@ void raining()
 void display(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT);
-	//พื้นดิน
-	glBegin(GL_POLYGON);
-	glColor3f(0.16, 0.08, 0.0);
-	glVertex2f(-1, -0.1 - 0.4);
-	glVertex2f(-1, -1);
-	glVertex2f(1, -1);
-	glVertex2f(1, -0.1 - 0.4);
-	glEnd();
 
 	night();
+	house(0.949, 0.854, 0.450); // open light in house
 	if (time <= 5000) {
 		daytime();
+		house(0.0, 0.5, 1.0);
 	}
-
-	flower(0.08, 1, -0.16);
-	flower(0.075, 0.9, -0.08);
-	flower(0.06, 0.8, -0.2);
-	flower(0.05, -0.07, -0.18);
-	flower(0.06, -0.2, -0.17);
-	flower(0.04, -0.13, -0.27);
-	flower(0.07, -0.3, -0.1);
-	flower(0.07, -0.4, -0.2);
-	flower(0.07, -0.5, -0.08);
-	flower(0.04, -0.56, -0.25);
-	flower(0.06, -0.62, -0.15);
-	flower(0.06, -0.7, -0.2);
-	flower(0.08, -0.8, -0.1);
-	flower(0.08, -0.9, -0.15);
-	for (int i = 0; i <= 30; i++) {
-		glColor3f(0.11, 0.08, 0.0);
-		fence(i);
-	}
-	house();
-
+	
 	if (random2 == 1)car(dx4, 0.4, r3, g3, b3);
 	if (random1 == 1)car(dx3, 0.2, r2, g2, b2);
 	car(dx1 - 0.5, 0, r, g, b); //normal car วิ่งไปเรื่อยๆ
 	if (random == 1)car(dx2, -0.2, r1, g1, b1);
 
+	bool israining = false;
 
 	if (rain == 1 || rain == 3) {
 		int sec = rand() % 20 + 1;
-		for (int i = 0; i < sec; i++)
+		for (int i = 0; i < sec; i++) {
+			israining = true;
 			raining();
+		}
 	}
 
 	glFlush();
@@ -503,14 +541,27 @@ void display(void)
 }
 void spinDisplay(void)
 {
+	//Flowe with wind
+	flowerWind += 0.001;
+	if (flowerWind == 0.360)
+		flowerWind = 0;
+
+	smoke += 1;
+	smoke2 += 1;
+	if (smoke2 == 10)
+		smoke2 = 0;
+	if (smoke == 100)
+		smoke = 0;
+
+	//Raining
+	ry1 += 0.002;
+	if (ry1 >= 0.095)
+		ry1 = -0.095;
+
 	dx1 -= 0.003;
 	dx2 -= 0.001;
 	dx3 -= 0.004;
 	dx4 -= 0.005;
-
-	ry1 += 0.002;
-	if (ry1 >= 0.095)
-		ry1 = -0.095;
 
 	if (dx1 <= -3.0) {
 		dx1 = 1.5;
@@ -549,8 +600,8 @@ void spinDisplay(void)
 		time = 0;
 	}
 
-	a += -0.01;
-	if (a == 360)
+	a -= 0.01;
+	if (a == -360)
 		a = 0;
 
 	glutPostRedisplay();
