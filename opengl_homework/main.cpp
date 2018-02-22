@@ -11,13 +11,12 @@ static GLfloat flowerWind = 0.0090;
 static GLfloat smoke = 0.0, smoke2 = 0.0;
 int random, random1, random2;
 int rain;
+int starchange;
 int time;
-void init(void)
-{
+void init(void){
 	glClearColor(0.0, 0.0, 0.0, 1.0);
 }
-void circle(float r, float x1, float y1)
-{
+void circle(float r, float x1, float y1){
 	float x, y;
 	glBegin(GL_POLYGON);
 	for (int i = 0; i <= 360; i++) {
@@ -27,8 +26,7 @@ void circle(float r, float x1, float y1)
 	}
 	glEnd();
 }
-void ellipas(float a, float b, float x1, float y1, float ar)
-{
+void ellipas(float a, float b, float x1, float y1, float ar){
 	float x, y, xr, yr;
 	glBegin(GL_POLYGON);
 	for (int i = 0; i <= 360; i++) {
@@ -40,43 +38,30 @@ void ellipas(float a, float b, float x1, float y1, float ar)
 	}
 	glEnd();
 }
-void line(float x1, float y1,float ar)
-{
+void line(float x1, float y1,float ar){
 	float xr, yr;
-
-	//wind - not done
-	xr = -(x1 * cos(ar) + -0.5 * sin(ar));
-	yr = x1 * sin(ar) - -0.5 * cos(ar);
-
 	glLineWidth(10);
 	glColor3f(0.0, 0.09, 0.0);
 	glBegin(GL_LINES);
 	glVertex2f(x1, -0.5);
-	glVertex2f(x1 , y1);
+	glVertex2f(x1 + ar, y1);
 	glEnd();
 }
-void flower(float r, float x1, float y1,float ar)
-{
+void flower(float r, float x1, float y1,float ar){
 	float x, y, xr, yr;
-	line(x1, y1, ar);
-
-	//wind not done
-	xr = x1 * cos(ar) - -0.5 * sin(ar);
-	yr = x1 * sin(ar) + -0.5 * cos(ar);
-
+	line(x1, y1, -ar);
 	glColor3f(0.86, 0.73, 0.0);
 	glBegin(GL_POLYGON_BIT);
 	for(int i = 0; i <= 360; i++) {
 		x = r * cos(8 * i) * cos(i);
 		y = r * cos(8 * i) * sin(i);
-		glVertex2f(x + x1, y + y1);
+		glVertex2f(x + x1 - ar, y + y1);
 	}
 	glEnd();
 	glColor3f(0.06, 0.03, 0.0);
-	circle(r/2, x1, y1);
+	circle(r/2, x1 - ar, y1);
 }
-void night()
-{
+void night(){
 	glBegin(GL_POLYGON);
 	glColor3f(0.0, 0.0, 0.0);
 	glVertex2f(-1, -0.5);
@@ -87,6 +72,46 @@ void night()
 	glColor3f(0.027, 0.156, 0.352);
 	glVertex2f(1, -0.5);
 	glEnd();
+}
+void star(){
+	float r = 0.01;
+	if (starchange <= 35) {
+		glColor3f(1, 1, 1);
+	}
+	else {
+		glColor3f(0.941, 1, 0.521);
+	}
+	circle(r, 0.5, 0.87);
+	circle(r, -0.1, 0.6);
+	circle(r, -0.15, 0.9);
+	circle(r, -0.2, 0.4);
+	circle(r, -0.25, 0.84);
+	circle(r, -0.3, 0.55);
+	circle(r, -0.35, 0.35);
+	circle(r, -0.4, 0.59);
+	circle(r, -0.45, 0.35);
+	circle(r, -0.5, 0.65);
+	circle(r, -0.55, 0.87);
+	circle(r, -0.6, 0.75);
+	circle(r, -0.65, 0.63);
+	circle(r, -0.7, 0.41);
+	circle(r, -0.75, 0.62);
+	circle(r, -0.8, 0.53);
+	circle(r, -0.85, 0.72);
+	circle(r, -0.9, 0.85);
+	circle(r, -0.5, 0.86);
+	circle(r, 0.0, 0.79);
+	circle(r, 0.1, 0.66);
+	circle(r, 0.2, 0.81);
+	circle(r, 0.3, 0.39);
+	circle(r, 0.35, 0.61);
+	circle(r, 0.4, 0.54);
+	circle(r, 0.5, 0.65);
+	circle(r, 0.5, 0.81);
+	circle(r, 0.6, 0.75);
+	circle(r, 0.7, 0.85);
+	circle(r, 0.8, 0.92);
+	circle(r, 0.9, 0.77);
 }
 void daytime()
 {
@@ -149,8 +174,20 @@ void house(float r,float g, float b)
 	flower(0.08, 1, -0.16, flowerWind);
 	flower(0.075, 0.9, -0.08, flowerWind);
 	flower(0.06, 0.8, -0.2, flowerWind);
+	flower(0.068, 0.9, -0.25, flowerWind);
+	//howdy
+	flower(0.09, 0.7, -0.1, flowerWind);
+	glColor3f(1, 1, 1);
+	circle(0.09 / 20, 0.73 - flowerWind, -0.1);
+	glLineWidth(1);
+	glBegin(GL_LINES);
+	glVertex2f(0.69 - flowerWind, -0.11);
+	glVertex2f(0.72 - flowerWind, -0.11);
+	glEnd();
+	//
 	flower(0.05, -0.07, -0.18, flowerWind);
 	flower(0.06, -0.2, -0.17, flowerWind);
+	flower(0.07, -0.15, 0, flowerWind);
 	flower(0.04, -0.13, -0.27, flowerWind);
 	flower(0.07, -0.3, -0.1, flowerWind);
 	flower(0.07, -0.4, -0.2, flowerWind);
@@ -510,30 +547,27 @@ void raining()
 	test.draw(ry1, ry1, -1.9);
 	test.draw(ry1, ry1, -2);
 }
-void display(void)
-{
+void display(void){
 	glClear(GL_COLOR_BUFFER_BIT);
-
 	night();
 	house(0.949, 0.854, 0.450); // open light in house
 	if (time <= 5000) {
 		daytime();
 		house(0.0, 0.5, 1.0);
 	}
-	
+
 	if (random2 == 1)car(dx4, 0.4, r3, g3, b3);
 	if (random1 == 1)car(dx3, 0.2, r2, g2, b2);
 	car(dx1 - 0.5, 0, r, g, b); //normal car วิ่งไปเรื่อยๆ
 	if (random == 1)car(dx2, -0.2, r1, g1, b1);
 
-	bool israining = false;
-
 	if (rain == 1 || rain == 3) {
 		int sec = rand() % 20 + 1;
-		for (int i = 0; i < sec; i++) {
-			israining = true;
+		for (int i = 0; i < sec; i++) 
 			raining();
-		}
+	}else{
+		if(time >= 5000)
+			star();
 	}
 
 	glFlush();
@@ -542,10 +576,16 @@ void display(void)
 void spinDisplay(void)
 {
 	//Flowe with wind
-	flowerWind += 0.001;
-	if (flowerWind == 0.360)
-		flowerWind = 0;
+	flowerWind += 0.0001;
+	if (flowerWind > 0.009)
+		flowerWind = -0.009;
+		
+	//shining star
+	starchange += 1;
+	if (starchange == 100)
+		starchange = 0;
 
+	//Smoke house and cars
 	smoke += 1;
 	smoke2 += 1;
 	if (smoke2 == 10)
@@ -595,11 +635,13 @@ void spinDisplay(void)
 		random2 = rand() % 2 + 1;
 	}
 
+	//day/night cycle
 	time += 1;
 	if (time == 10000) {
 		time = 0;
 	}
 
+	//car wheels
 	a -= 0.01;
 	if (a == -360)
 		a = 0;
